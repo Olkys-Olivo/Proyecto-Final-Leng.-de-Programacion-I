@@ -2,7 +2,7 @@ import tkinter as tk
 import os
 from CRUD_Pacientes import ModuloPacientes
 from ModuloDoctores import ModuloDoctores
-#from citas_ej import Citas
+from AgendarCitas import ModuloCitasApp
 
 class Root(tk.Tk):
     def __init__(self):
@@ -44,6 +44,8 @@ class Root(tk.Tk):
         self.pacientes_btn = tk.Button(
             self.frame_navbar,
             text="Pacientes",
+            height=1,
+            width=10,
             font=("Arial", 12),
             background="#4A90E2",
             foreground="#FFFFFF",
@@ -59,6 +61,8 @@ class Root(tk.Tk):
         self.doctores_btn = tk.Button(
             self.frame_navbar,
             text="Doctores",
+            height=1,
+            width=10,
             font=("Arial", 12),
             background="#4A90E2",
             foreground="#FFFFFF",
@@ -74,6 +78,8 @@ class Root(tk.Tk):
         self.citas_btn = tk.Button(
             self.frame_navbar,
             text="Citas",
+            height=1,
+            width=10,
             font=("Arial", 12),
             background="#4A90E2",
             foreground="#FFFFFF",
@@ -82,7 +88,7 @@ class Root(tk.Tk):
             borderwidth=2,
             relief="solid",
             cursor="hand2",
-           # command=self.abrir_citas
+            command=self.abrir_citas
         )
         self.citas_btn.grid(row=0, column=3, padx=10)
 
@@ -109,16 +115,18 @@ class Root(tk.Tk):
             lambda: self.cerrar_ventana("doctores")
         )
 
-  #  def abrir_citas(self):
-       # if self.ventana_citas and tk.Toplevel.winfo_exists(self.ventana_citas):
-          #  self.ventana_citas.lift()
-       #     return
-      #  self.withdraw()
-       # self.ventana_citas = Citas(self)
-        #self.ventana_citas.protocol(
-          #  "WM_DELETE_WINDOW",
-          #  lambda: self.cerrar_ventana("citas")
-     #   )
+    def abrir_citas(self):
+        if self.ventana_citas and tk.Toplevel.winfo_exists(self.ventana_citas.root):
+            self.ventana_citas.root.lift()
+            return
+        self.withdraw()
+        self.ventana_citas = ModuloCitasApp(self)
+        self.ventana_citas.root.protocol(
+            "WM_DELETE_WINDOW",
+            lambda: self.cerrar_ventana("citas")
+        )
+
+
 
     # funcion para cuando se cierre un top level
     def cerrar_ventana(self, tipo):
@@ -129,7 +137,7 @@ class Root(tk.Tk):
             self.ventana_doctores.ventana.destroy()
             self.ventana_doctores = None
         elif tipo == "citas" and self.ventana_citas:
-            self.ventana_citas.destroy()
+            self.ventana_citas.root.destroy()
             self.ventana_citas = None
         self.deiconify()
 
